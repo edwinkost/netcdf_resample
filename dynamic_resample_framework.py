@@ -31,8 +31,8 @@ class ResampleFramework(DynamicModel):
                                                      True)
 
         # resampling factor: ratio between output and input resolutions
-        self.resample_factor = vos.getMapAttributes(self.output_netcdf["cell_resolution"])/\
-                               vos.getMapAttributes(self.input_clone['cellsize'])
+        self.resample_factor = self.output_netcdf["cell_resolution"]/\
+                               self.input_clone['cell_resolution'])
         
         # clone map 
         if self.resample_factor > 1.0: # upscaling
