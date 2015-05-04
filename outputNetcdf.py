@@ -16,32 +16,32 @@ filecache = dict()
 
 class OutputNetcdf():
     
-    def __init__(self, output_clone):
+    def __init__(self, output_netcdf):
         		
         # latitudes and longitudes
-        cellLength = output_clone['cellsize']
+        cellLength = output_netcdf['cellsize']
         deltaLat = cellLength
-        latMax = output_clone['yUL'] - deltaLat/2.
-        latMin = output_clone['yUL'] - deltaLat*output_clone['rows'] + deltaLat/2.
+        latMax = output_netcdf['yUL'] - deltaLat/2.
+        latMin = output_netcdf['yUL'] - deltaLat*output_netcdf['rows'] + deltaLat/2.
         deltaLon = cellLength
-        lonMin = output_clone['xUL'] + deltaLon/2.
-        lonMax = output_clone['xUL'] + deltaLon*output_clone['rows'] - deltaLon/2.
+        lonMin = output_netcdf['xUL'] + deltaLon/2.
+        lonMax = output_netcdf['xUL'] + deltaLon*output_netcdf['rows'] - deltaLon/2.
         self.latitudes  = np.arange(latMax,latMin-deltaLat,-deltaLat)
         self.longitudes = np.arange(lonMin,lonMax+deltaLon,deltaLon)
 
         # netcdf format and zlib setup
-        self.format = output_clone['format']
-        self.zlib   = output_clone['zlib'] 
+        self.format = output_netcdf['format']
+        self.zlib   = output_netcdf['zlib'] 
         
         # netcdf attributes
         self.attributeDictionary = {}
-        self.attributeDictionary['institution'] = output_clone['netcdf_attribute']['institution']
-        self.attributeDictionary['title'      ] = output_clone['netcdf_attribute']['title'      ]
-        self.attributeDictionary['source'     ] = output_clone['netcdf_attribute']['source'     ]
-        self.attributeDictionary['history'    ] = output_clone['netcdf_attribute']['history'    ]
-        self.attributeDictionary['references' ] = output_clone['netcdf_attribute']['references' ]
-        self.attributeDictionary['description'] = output_clone['netcdf_attribute']['description']
-        self.attributeDictionary['comment'    ] = output_clone['netcdf_attribute']['comment'    ]
+        self.attributeDictionary['institution'] = output_netcdf['netcdf_attribute']['institution']
+        self.attributeDictionary['title'      ] = output_netcdf['netcdf_attribute']['title'      ]
+        self.attributeDictionary['source'     ] = output_netcdf['netcdf_attribute']['source'     ]
+        self.attributeDictionary['history'    ] = output_netcdf['netcdf_attribute']['history'    ]
+        self.attributeDictionary['references' ] = output_netcdf['netcdf_attribute']['references' ]
+        self.attributeDictionary['description'] = output_netcdf['netcdf_attribute']['description']
+        self.attributeDictionary['comment'    ] = output_netcdf['netcdf_attribute']['comment'    ]
         
     def createNetCDF(self, ncFileName, varName, varUnits, longName=None):
 

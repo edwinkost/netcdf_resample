@@ -41,20 +41,20 @@ class ResampleFramework(DynamicModel):
             self.resample_factor = round(self.resample_factor)
             
             # output clone properties
-            self.output_clone = {}
-            self.output_clone['rows'    ] = int(round(float(self.input_clone['rows'])/float(self.resample_factor))) 
-            self.output_clone['cols'    ] = int(round(float(self.input_clone['cols'])/float(self.resample_factor)))
-            self.output_clone['cellsize'] = self.output_netcdf["cell_resolution"]
-            self.output_clone['xUL'     ] = self.input_clone['xUL']
-            self.output_clone['yUL'     ] = self.input_clone['yUL']
+            self.output_netcdf = {}
+            self.output_netcdf['rows'    ] = int(round(float(self.input_clone['rows'])/float(self.resample_factor))) 
+            self.output_netcdf['cols'    ] = int(round(float(self.input_clone['cols'])/float(self.resample_factor)))
+            self.output_netcdf['cellsize'] = self.output_netcdf["cell_resolution"]
+            self.output_netcdf['xUL'     ] = self.input_clone['xUL']
+            self.output_netcdf['yUL'     ] = self.input_clone['yUL']
 
             # get the unique ids for the output resolution
             # - use the clone for the output resolution (only for a temporary purpose)
-            pcr.setclone(self.output_clone['rows'    ],
-                         self.output_clone['cols'    ],
-                         self.output_clone['cellsize'],
-                         self.output_clone['xUL'     ],
-                         self.output_clone['yUL'     ])
+            pcr.setclone(self.output_netcdf['rows'    ],
+                         self.output_netcdf['cols'    ],
+                         self.output_netcdf['cellsize'],
+                         self.output_netcdf['xUL'     ],
+                         self.output_netcdf['yUL'     ])
             # - unique_ids in a numpy object
             cell_unique_ids = pcr.pcr2numpy(pcr.scalar(pcr.uniqueid(pcr.boolean(1.))),vos.MV)
 
@@ -81,20 +81,20 @@ class ResampleFramework(DynamicModel):
         else: # downscaling / resampling to smaller cell length
 
             # all pcraster calculations are performed at the output resolution
-            pcr.setclone(self.output_clone['rows'    ],
-                         self.output_clone['cols'    ],
-                         self.output_clone['cellsize'],
-                         self.output_clone['xUL'     ],
-                         self.output_clone['yUL'     ])
+            pcr.setclone(self.output_netcdf['rows'    ],
+                         self.output_netcdf['cols'    ],
+                         self.output_netcdf['cellsize'],
+                         self.output_netcdf['xUL'     ],
+                         self.output_netcdf['yUL'     ])
 
             # clone map file
             self.clone_map_file = self.output_netcdf['clone_file']
         
         # an object for netcdf reporting
-        self.output = OutputNetcdf(self.output_clone)       
+        self.output = OutputNetcdf(self.output_netcdf)       
         
         # preparing the netcdf file at coarse resolution:
-        self.output.createNetCDF(self.output_clone)
+        self.output.createNetCDF(self.output_netcdf)
         #
         # edit some attributes:
         attributeDictionary = {}
