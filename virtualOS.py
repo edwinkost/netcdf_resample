@@ -68,31 +68,6 @@ def netcdfCloneAttributes(ncFile,
     return netcdfAttr 
 
 
-def getMapAttributes(cloneMap,attribute):
-    co = ['mapattr -p %s ' %(cloneMap)]
-    cOut,err = subprocess.Popen(co, stdout=subprocess.PIPE,stderr=open('/dev/null'),shell=True).communicate()
-    #print cOut
-    if err !=None or cOut == []:
-        print "Something wrong with mattattr in virtualOS, maybe clone Map does not exist ? "
-        sys.exit()
-    #print cOut.split()
-    co = None; err = None
-    del co; del err
-    n = gc.collect() ; del gc.garbage[:] ; n = None ; del n
-    if attribute == 'cellsize':
-        return float(cOut.split()[7])
-    if attribute == 'rows':
-        return int(cOut.split()[3])
-        #return float(cOut.split()[3])
-    if attribute == 'cols':
-        return int(cOut.split()[5])
-        #return float(cOut.split()[5])
-    if attribute == 'xUL':
-        return float(cOut.split()[17])
-    if attribute == 'yUL':
-        return float(cOut.split()[19])
-
-
 def netcdf2PCRobjCloneWithoutTime(ncFile,varName,
                                   cloneMapFileName  = None,\
                                   LatitudeLongitude = True,\
