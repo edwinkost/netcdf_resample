@@ -41,7 +41,6 @@ class ResampleFramework(DynamicModel):
             self.resample_factor = round(self.resample_factor)
             
             # output clone properties
-            self.output_netcdf = {}
             self.output_netcdf['rows'    ] = int(round(float(self.input_clone['rows'])/float(self.resample_factor))) 
             self.output_netcdf['cols'    ] = int(round(float(self.input_clone['cols'])/float(self.resample_factor)))
             self.output_netcdf['cellsize'] = self.output_netcdf["cell_resolution"]
