@@ -18,10 +18,11 @@ import virtualOS as vos
 
 # input netcdf file:
 input_netcdf = {}
-input_netcdf['file_name']       = ""
-input_netcdf['variable_name']   = ""
-# cell area (m2) for the input netcdf file
-input_netcdf['cell_area']       = ""
+input_netcdf['file_name']        = ""
+input_netcdf['variable_name']    = ""
+# cell area (m2) for the input netcdf file (used for )
+input_netcdf['cell_resolution']  = 5./60.
+input_netcdf['cell_area']        = ""
 
 # output netcdf file:
 output_netcdf = {}
@@ -30,6 +31,7 @@ output_netcdf['file_name']       = ""
 output_netcdf['variable_name']   = ""
 # cell size/length/resolution (arc-degree) for the output netcdf file 
 output_netcdf['cell_resolution'] = ""
+
 
 # starting and end dates
 startDate = "2003-01-01" #YYYY-MM-DD

@@ -26,8 +26,9 @@ smallNumber = 1E-39
 # the following dictionary is needed to avoid open and closing files
 filecache = dict()
 
-
-def netcdfCloneAttributes(ncFile)
+def netcdfCloneAttributes(ncFile, 
+                          cellSizeInArcMinutes = None,
+                          roundUpperLeftCenterCoordinates = True):
 
     if ncFile in filecache.keys():
         f = filecache[ncFile]
@@ -43,14 +44,51 @@ def netcdfCloneAttributes(ncFile)
     except:
         pass
 
-    # get the attributes of input (netCDF) 
-    cellsize = f.variables['lat'][0]- f.variables['lat'][1]
-    cellsize = float(cellsizeInput)
-    rowsInput = len(f.variables['lat'])
-    colsInput = len(f.variables['lon'])
-    xULInput = f.variables['lon'][0]-0.5*cellsizeInput
-    yULInput = f.variables['lat'][0]+0.5*cellsizeInput
+    # get the attributes of input (netCDF):
+    # - numbers of rows and columns:
+    nrRows   = len(f.variables['lat'])
+    nrCols   = len(f.variables['lon'])
+    # - cell resolution
+    cellSize = f.variables['lat'][0]- f.variables['lat'][1]                  # TODO: Include inverting latitude coordinates if f.variables['lat'][0] < f.variables['lat'][1].
+    if cellSizeInArcMinutes != None: cellSize = cellSizeInArcMinutes/60.
+    # - upper left coordinates (cell centres)
+    xULInput = f.variables['lon'][0] - 0.5*cellSize
+    yULInput = f.variables['lat'][0] + 0.5*cellSize
+    if roundUpperLeftCenterCoordinates:
+        xULInput = round(xULInput)
+        yULInput = round(yULInput)
+    
+    # a dictionary containing the attributes
+    netcdfAttr = {'cellsize': cellSize,\
+                  'rows'    : nrRows,\
+                  'cols'    : nrCols,\
+                  'xUL'     : xULInput,\
+                  'yUL'     : yULInput}
+    return netcdfAttr 
 
+def getMapAttributes(cloneMap,attribute):
+    co = ['mapattr -p %s ' %(cloneMap)]
+    cOut,err = subprocess.Popen(co, stdout=subprocess.PIPE,stderr=open('/dev/null'),shell=True).communicate()
+    #print cOut
+    if err !=None or cOut == []:
+        print "Something wrong with mattattr in virtualOS, maybe clone Map does not exist ? "
+        sys.exit()
+    #print cOut.split()
+    co = None; err = None
+    del co; del err
+    n = gc.collect() ; del gc.garbage[:] ; n = None ; del n
+    if attribute == 'cellsize':
+        return float(cOut.split()[7])
+    if attribute == 'rows':
+        return int(cOut.split()[3])
+        #return float(cOut.split()[3])
+    if attribute == 'cols':
+        return int(cOut.split()[5])
+        #return float(cOut.split()[5])
+    if attribute == 'xUL':
+        return float(cOut.split()[17])
+    if attribute == 'yUL':
+        return float(cOut.split()[19])
 
 
 def netcdf2PCRobjCloneWithoutTime(ncFile,varName,

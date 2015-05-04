@@ -25,22 +25,32 @@ class ResampleFramework(DynamicModel):
         self.tmpDir = tmpDir
         self.modelTime = modelTime
 
+        # input clone properties (based on netcdf file):
+        self.input_clone = vos.netcdfCloneAttributes(self.input_netcdf['file_name'],\
+                                                     self.input_netcdf['cell_resolution']*60.,\
+                                                     True)
+
         # resampling factor: ratio between output and input resolutions
         self.resample_factor = vos.getMapAttributes(self.output_netcdf["cell_resolution"])/\
-                               vos.getMapAttributes(self.input_netcdf["cell_area"],'cellsize')
-
-        # input clone properties
-        
-        
+                               vos.getMapAttributes(self.input_clone['cellsize'])
         
         # clone map 
-        if self.resample_factor > 1.0
+        if self.resample_factor > 1.0: # Upscaling
+            # the resample factor must be a rounded value without decimal
+            if self.resample_factor = round(self.resample_factor)
             # get the unique ids for the output resolution
-            pcr.setclone(self.input_netcd["cell_area"])
+            # - use the clone for the output resolution (only for a temporary purpose)
+            pcr.setclone(self.resample_factor[],\
+                         self.resample_factor[],\
+                         self.resample_factor[],\
+                         )                          # order: nrRows,nrCols,cellSize,west(),north()
+            
+            self.unique_ids = pcr.
+
+
             
             
-            
-            # all pcraster calculations are performed at the input resolution
+            # the remaining pcraster calculations are performed at the input resolution
             pcr.setclone(self.input_netcd["cell_area"])
             
             self.resample_factor = round(self.resample_factor)
