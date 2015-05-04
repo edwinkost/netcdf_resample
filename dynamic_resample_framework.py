@@ -65,6 +65,9 @@ class ResampleFramework(DynamicModel):
                          self.input_clone['xUL'     ],
                          self.input_clone['yUL'     ])
             
+            # clone map file 
+            self.clone_map_file = self.input_netcdf['clone_file']
+            
             # cell unique ids in a pcraster object
             self.unique_ids = pcr.nominal(pcr.numpy2pcr(pcr.Scalar,
                               vos.regridData2FinerGrid(self.resample_factor,cell_unique_ids), vos.MV))
@@ -78,14 +81,14 @@ class ResampleFramework(DynamicModel):
         else: # downscaling / resampling to smaller cell length
 
             # all pcraster calculations are performed at the output resolution
-            pcr.setclone(self.input_clone['rows'    ],
-                         self.input_clone['cols'    ],
-                         self.input_clone['cellsize'],
-                         self.input_clone['xUL'     ],
-                         self.input_clone['yUL'     ])
+            pcr.setclone(self.output_clone['rows'    ],
+                         self.output_clone['cols'    ],
+                         self.output_clone['cellsize'],
+                         self.output_clone['xUL'     ],
+                         self.output_clone['yUL'     ])
 
-            # clone map file needed for the function "vos.readPCRmapClone"
-            self.clone_map_file = self.input_netcdf['clone_file']
+            # clone map file used in the calculation
+            self.clone_map_file = self.output_netcdf['clone_file']
         
         # an object for netcdf reporting
         self.output = OutputNetcdf(self.output_clone)       
