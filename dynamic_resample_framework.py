@@ -93,7 +93,9 @@ class ResampleFramework(DynamicModel):
         self.output = OutputNetcdf(self.output_netcdf)       
         
         # preparing the netcdf file at coarse resolution:
-        self.output.createNetCDF(self.output_netcdf)
+        self.output.createNetCDF(self.output_netcdf['file_name'],
+                                 self.output_netcdf['variable_name'],
+                                 self.output_netcdf['variable_unit'])
         #
         # edit some attributes:
         attributeDictionary = {}
