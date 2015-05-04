@@ -109,7 +109,7 @@ class ResampleFramework(DynamicModel):
         if self.modelTime.isLastDayOfMonth():
             input_value = vos.netcdf2PCRobjClone(ncFile  = self.input_netcdf['file_name'],
                                                  varName = self.input_netcdf['variable_name'],
-                                                 dateInput = self.modelTime.fulldate,
+                                                 dateInput = str(self.modelTime.fulldate),
                                                  useDoy = None,
                                                  cloneMapFileName = self.clone_map_file)
             data_available = True  
