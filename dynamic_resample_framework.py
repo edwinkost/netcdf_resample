@@ -32,7 +32,7 @@ class ResampleFramework(DynamicModel):
 
         # resampling factor: ratio between output and input resolutions
         self.resample_factor = self.output_netcdf["cell_resolution"]/\
-                               self.input_clone['cell_resolution'])
+                                self.input_netcdf['cell_resolution'])
         
         # clone map 
         if self.resample_factor > 1.0: # upscaling
