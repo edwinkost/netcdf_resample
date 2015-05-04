@@ -50,7 +50,7 @@ output_netcdf['netcdf_attribute']['source'     ] = "test version (by Edwin H. Su
 output_netcdf['netcdf_attribute']['history'    ] = "None"
 output_netcdf['netcdf_attribute']['references' ] = "None"
 output_netcdf['netcdf_attribute']['description'] = "None"
-output_netcdf['netcdf_attribute']['comment'    ] = "This 30 arc-min field is upscaled from 5 arc-min field."
+output_netcdf['netcdf_attribute']['comment'    ] = "Note that this 30 arc-min field is upscaled from 5 arc-min field."
 
 # starting and end dates:
 startDate = "2003-01-01" # YYYY-MM-DD
