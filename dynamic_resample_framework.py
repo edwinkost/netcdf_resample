@@ -38,7 +38,7 @@ class ResampleFramework(DynamicModel):
         if self.resample_factor > 1.0: # upscaling
 
             # the resample factor must be a rounded value without decimal
-            if self.resample_factor = round(self.resample_factor)
+            self.resample_factor = round(self.resample_factor)
             
             # output clone properties
             self.output_clone = {}
