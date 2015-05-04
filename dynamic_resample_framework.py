@@ -70,7 +70,7 @@ class ResampleFramework(DynamicModel):
             
             # cell unique ids in a pcraster object
             self.unique_ids = pcr.nominal(pcr.numpy2pcr(pcr.Scalar,
-                              vos.regridData2FinerGrid(self.resample_factor,cell_unique_ids), vos.MV))
+                              vos.regridData2FinerGrid(self.resample_factor,cell_unique_ids, vos.MV), vos.MV))
 
             # cell area (m2)
             self.cell_area = vos.readPCRmapClone(\
@@ -87,7 +87,7 @@ class ResampleFramework(DynamicModel):
                          self.output_clone['xUL'     ],
                          self.output_clone['yUL'     ])
 
-            # clone map file used in the calculation
+            # clone map file
             self.clone_map_file = self.output_netcdf['clone_file']
         
         # an object for netcdf reporting
