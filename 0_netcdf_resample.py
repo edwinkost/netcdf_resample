@@ -23,7 +23,7 @@ endDate   = "2010-12-31" #YYYY-MM-DD
 # input netcdf file:
 input_netcdf = {}
 input_netcdf['folder']           = "/scratch/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/netcdf/"
-input_netcdf['file_name']        = "totalEvaporation_monthAvg_output.nc"
+input_netcdf['file_name']        = "totalEvaporation_monthTot_output.nc"
 input_netcdf['file_name']        = input_netcdf['folder']+"/"+input_netcdf['file_name']
 input_netcdf['variable_name']    = "total_evaporation"
 input_netcdf['clone_file']       = "/data/hydroworld/PCRGLOBWB20/input5min/routing/cellsize05min.correct.map"
@@ -36,10 +36,10 @@ output_netcdf = {}
 # cell size/length/resolution (arc-degree) for the output netcdf file 
 output_netcdf['cell_resolution'] = 30./60.
 output_netcdf['folder']          = "/scratch/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/analysis/30min_upscaled"
-output_netcdf['file_name']       = "totalEvaporation_monthAvg_output_30min_upscaled_from_5min.nc"
+output_netcdf['file_name']       = "totalEvaporation_monthTot_output_30min_upscaled_from_5min.nc"
 output_netcdf['file_name']       = output_netcdf['folder']+"/"+output_netcdf['file_name']
 output_netcdf['variable_name']   = "total_evaporation"
-output_netcdf['variable_unit']   = "m.day-1"
+output_netcdf['variable_unit']   = "m.month-1"
 #
 output_netcdf['format']    = "NETCDF4"
 output_netcdf['zlib']      = True
@@ -53,10 +53,11 @@ output_netcdf['netcdf_attribute']['description'] = "None"
 output_netcdf['netcdf_attribute']['comment'    ] = "Note that this 30 arc-min field is upscaled from 5 arc-min field."
 
 # make an output folder
+cleanOutputFolder = False
 try:
     os.makedirs(output_netcdf['folder'])
 except:
-    os.system('rm -r '+str(output_netcdf['folder'])+"/*")
+    if cleanOutputFolder: os.system('rm -r '+str(output_netcdf['folder'])+"/*")
 
 # make a temporary folder 
 tmpDir = output_netcdf['folder']+"/"+"tmp/"
