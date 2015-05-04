@@ -96,12 +96,6 @@ class ResampleFramework(DynamicModel):
         self.output.createNetCDF(self.output_netcdf['file_name'],
                                  self.output_netcdf['variable_name'],
                                  self.output_netcdf['variable_unit'])
-        #
-        # edit some attributes:
-        attributeDictionary = {}
-        attributeDictionary['description']      = "One degree resolution total water storage (tws), upscaled from PCR-GLOBWB result. "
-        self.output.changeAtrribute(self.output_files['one_degree_tws']['model'],\
-                                    attributeDictionary)                       
         
     def initial(self): 
         pass
