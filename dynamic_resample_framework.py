@@ -113,7 +113,7 @@ class ResampleFramework(DynamicModel):
 
         # reading
         try:
-            input_value = 
+            input_value = vos.
             data_available = True  
         
         except:
