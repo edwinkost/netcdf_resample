@@ -23,7 +23,7 @@ endDate   = "2010-12-31" #YYYY-MM-DD
 # input netcdf file:
 input_netcdf = {}
 input_netcdf['folder']           = "/scratch/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/netcdf/"
-input_netcdf['file_name']        = "totalEvaporation_monthAvg_output.nc
+input_netcdf['file_name']        = "totalEvaporation_monthAvg_output.nc"
 input_netcdf['file_name']        = input_netcdf['folder']+"/"+input_netcdf['file_name']
 input_netcdf['variable_name']    = "total_evaporation"
 input_netcdf['clone_file']       = "/data/hydroworld/PCRGLOBWB20/input5min/routing/cellsize05min.correct.map"
