@@ -117,7 +117,7 @@ class ResampleFramework(DynamicModel):
                                                  varName = self.input_netcdf['variable_name'],
                                                  dateInput = self.modelTime.fulldate,
                                                  useDoy = None,
-                                                 cloneMapFileName = self.clone_map_file):
+                                                 cloneMapFileName = self.clone_map_file)
             data_available = True  
         
         except:
