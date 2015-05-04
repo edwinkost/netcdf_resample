@@ -126,7 +126,7 @@ class ResampleFramework(DynamicModel):
             # upscaling using cell area
             output_value_in_pcraster = \
                             vos.getValDivZero(\
-                            pcr.areatotal(output_value*self_cell_area, self.unique_ids),\
+                            pcr.areatotal(output_value*self.cell_area, self.unique_ids),\
                             pcr.areatotal(self.cell_area, self.unique_ids), vos.smallNumber)
             
             # resample to the output clone resolution 
