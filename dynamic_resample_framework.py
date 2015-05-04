@@ -56,7 +56,7 @@ class ResampleFramework(DynamicModel):
                          self.output_clone['xUL'     ],
                          self.output_clone['yUL'     ])
             # - unique_ids in a numpy object
-            cell_unique_ids = pcr.pcr2numpy(pcr.scalar(pcr.uniqueid(pcr.boolean(1.)),vos.MV))
+            cell_unique_ids = pcr.pcr2numpy(pcr.scalar(pcr.uniqueid(pcr.boolean(1.))),vos.MV)
 
             # the remaining pcraster calculations are performed at the input resolution
             pcr.setclone(self.input_clone['rows'    ],
