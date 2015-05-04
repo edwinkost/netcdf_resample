@@ -106,7 +106,7 @@ class ResampleFramework(DynamicModel):
         self.modelTime.update(self.currentTimeStep())
 
         # reading
-        try:
+        if self.modelTime.isLastDayOfMonth():
             input_value = vos.netcdf2PCRobjClone(ncFile  = self.input_netcdf['file_name'],
                                                  varName = self.input_netcdf['variable_name'],
                                                  dateInput = self.modelTime.fulldate,
@@ -114,7 +114,7 @@ class ResampleFramework(DynamicModel):
                                                  cloneMapFileName = self.clone_map_file)
             data_available = True  
         
-        except:
+        else:
             print "No values are available for this date: "+str(self.modelTime)
             data_available = False 
         
