@@ -43,14 +43,14 @@ output_netcdf['variable_unit']   = "m.day-1"
 #
 output_netcdf['format']    = "NETCDF4"
 output_netcdf['zlib']      = True
-output_netcdf['attribute'] = {}
-output_netcdf['attribute']['institution'] = "Department of Physical Geography, Utrecht University" 
-output_netcdf['attribute']['title'      ] = "PCR-GLOBWB output"
-output_netcdf['attribute']['source'     ] = "test version (by Edwin H. Sutanudjaja)" 
-output_netcdf['attribute']['history'    ] = "None"
-output_netcdf['attribute']['references' ] = "None"
-output_netcdf['attribute']['description'] = "None"
-output_netcdf['attribute']['comment'    ] = "This 30 arc-min field is upscaled from 5 arc-min field."
+output_netcdf['netcdf_attribute'] = {}
+output_netcdf['netcdf_attribute']['institution'] = "Department of Physical Geography, Utrecht University" 
+output_netcdf['netcdf_attribute']['title'      ] = "PCR-GLOBWB output"
+output_netcdf['netcdf_attribute']['source'     ] = "test version (by Edwin H. Sutanudjaja)" 
+output_netcdf['netcdf_attribute']['history'    ] = "None"
+output_netcdf['netcdf_attribute']['references' ] = "None"
+output_netcdf['netcdf_attribute']['description'] = "None"
+output_netcdf['netcdf_attribute']['comment'    ] = "This 30 arc-min field is upscaled from 5 arc-min field."
 
 # starting and end dates:
 startDate = "2003-01-01" # YYYY-MM-DD
