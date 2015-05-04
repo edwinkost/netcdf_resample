@@ -74,7 +74,7 @@ class ResampleFramework(DynamicModel):
 
             # cell area (m2)
             self.cell_area = vos.readPCRmapClone(\
-                             self.output_netcdf["cell_area"],\
+                             self.input_netcdf["cell_area"],\
                              self.clone_map_file,\
                              self.tmpDir)
             
