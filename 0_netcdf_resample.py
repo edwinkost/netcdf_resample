@@ -22,30 +22,39 @@ endDate   = "2010-12-31" #YYYY-MM-DD
 
 # input netcdf file:
 input_netcdf = {}
-input_netcdf['file_name']        = ""
-input_netcdf['variable_name']    = ""
-input_netcdf['clone_file']       = ""
+input_netcdf['folder']           = "/scratch/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/netcdf/"
+input_netcdf['file_name']        = "totalEvaporation_monthAvg_output.nc
+input_netcdf['file_name']        = input_netcdf['folder']+"/"+input_netcdf['file_name']
+input_netcdf['variable_name']    = "total_evaporation"
+input_netcdf['clone_file']       = "/data/hydroworld/PCRGLOBWB20/input5min/routing/cellsize05min.correct.map"
 input_netcdf['cell_resolution']  = 5./60.
-# cell area (m2) for the input netcdf file
-input_netcdf['cell_area']        = ""
+# cell area (m2) for the input netcdf file:
+input_netcdf['cell_area']        = "/data/hydroworld/PCRGLOBWB20/input5min/routing/cellsize05min.correct.map"
 
 # output netcdf file:
 output_netcdf = {}
-output_netcdf['folder']          = ""
-output_netcdf['file_name']       = ""
-output_netcdf['variable_name']   = ""
 # cell size/length/resolution (arc-degree) for the output netcdf file 
-output_netcdf['cell_resolution'] = ""
+output_netcdf['cell_resolution'] = 30./60.
+output_netcdf['folder']          = "/scratch/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/analysis/30min_upscaled"
+output_netcdf['file_name']       = "totalEvaporation_monthAvg_output_30min_upscaled_from_5min.nc"
+output_netcdf['file_name']       = output_netcdf['folder']+"/"+output_netcdf['file_name']
+output_netcdf['variable_name']   = "total_evaporation"
+output_netcdf['variable_unit']   = "m.day-1"
+#
+output_netcdf['format']    = "NETCDF4"
+output_netcdf['zlib']      = True
+output_netcdf['attribute'] = {}
+output_netcdf['attribute']['institution'] = "Department of Physical Geography, Utrecht University" 
+output_netcdf['attribute']['title'      ] = "PCR-GLOBWB output"
+output_netcdf['attribute']['source'     ] = "test version (by Edwin H. Sutanudjaja)" 
+output_netcdf['attribute']['history'    ] = "None"
+output_netcdf['attribute']['references' ] = "None"
+output_netcdf['attribute']['description'] = "None"
+output_netcdf['attribute']['comment'    ] = "This 30 arc-min field is upscaled from 5 arc-min field."
 
-output_netcdf['format']    = ""
-output_netcdf['format']    = ""
-output_netcdf['attribute'] = ""
-
-
-# output netcdf attributes
-startDate = "2003-01-01" #YYYY-MM-DD
-endDate   = "2010-12-31" #YYYY-MM-DD
-
+# starting and end dates:
+startDate = "2003-01-01" # YYYY-MM-DD
+endDate   = "2010-12-31" # YYYY-MM-DD
 
 # make an output folder
 try:
