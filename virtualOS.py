@@ -28,7 +28,7 @@ filecache = dict()
 
 def netcdfCloneAttributes(ncFile, 
                           cellSizeInArcMinutes = None,
-                          roundUpperLeftCenterCoordinates = True):
+                          roundUpperLeftCornerCoordinates = True):
 
     if ncFile in filecache.keys():
         f = filecache[ncFile]
@@ -54,7 +54,7 @@ def netcdfCloneAttributes(ncFile,
     # - upper left coordinates (cell centres)
     xULInput = f.variables['lon'][0] - 0.5*cellSize
     yULInput = f.variables['lat'][0] + 0.5*cellSize
-    if roundUpperLeftCenterCoordinates:
+    if roundUpperLeftCornerCoordinates:
         xULInput = round(xULInput)
         yULInput = round(yULInput)
     
@@ -64,7 +64,9 @@ def netcdfCloneAttributes(ncFile,
                   'cols'    : nrCols,\
                   'xUL'     : xULInput,\
                   'yUL'     : yULInput}
+   
     return netcdfAttr 
+
 
 def getMapAttributes(cloneMap,attribute):
     co = ['mapattr -p %s ' %(cloneMap)]

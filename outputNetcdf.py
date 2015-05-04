@@ -9,85 +9,77 @@ import re
 import subprocess
 import netCDF4 as nc
 import numpy as np
-import pcraster as pcr
 import virtualOS as vos
+
+# the following dictionary is needed to avoid open and closing files
+filecache = dict()
 
 class OutputNetcdf():
     
-    def __init__(self,cloneMapFileName,resetClone = None, attributeDictionary = None):
-        		
-        # cloneMap
-        if resetClone != None: pcr.setclone(cloneMapFileName)
-        cloneMap = pcr.boolean(pcr.readmap(cloneMapFileName))
-        cloneMap = pcr.boolean(pcr.scalar(1.0))
+    def __init__(self, output_clone):
         		
         # latitudes and longitudes
-        self.latitudes  = np.unique(pcr.pcr2numpy(pcr.ycoordinate(cloneMap), vos.MV))[::-1]
-        self.longitudes = np.unique(pcr.pcr2numpy(pcr.xcoordinate(cloneMap), vos.MV))
+        cellLength = output_clone['cellsize']
+        deltaLat = cellLength
+        latMax = output_clone['yUL'] - deltaLat/2.
+        latMin = output_clone['yUL'] - deltaLat*output_clone['rows'] + deltaLat/2.
+        deltaLon = cellLength
+        lonMin = output_clone['xUL'] + deltaLon/2.
+        lonMax = output_clone['xUL'] + deltaLon*output_clone['rows'] - deltaLon/2.
+        self.latitudes  = np.arange(latMax,latMin-deltaLat,-deltaLat)
+        self.longitudes = np.arange(lonMin,lonMax+deltaLon,deltaLon)
 
-        # reset clone (if necessary)
-        if resetClone != None: pcr.setclone(resetClone)
-
-        # netcdf format:
-        self.format = 'NETCDF3_CLASSIC'
+        # netcdf format and zlib setup
+        self.format = output_clone['format']
+        self.zlib   = output_clone['zlib'] 
         
+        # netcdf attributes
         self.attributeDictionary = {}
-        if attributeDictionary == None:
-            self.attributeDictionary['institution'] = "None"
-            self.attributeDictionary['title'      ] = "None"
-            self.attributeDictionary['source'     ] = "None"
-            self.attributeDictionary['history'    ] = "None"
-            self.attributeDictionary['references' ] = "None"
-            self.attributeDictionary['description'] = "None"
-            self.attributeDictionary['comment'    ] = "None"
-        else:
-            self.attributeDictionary = attributeDictionary
+        self.attributeDictionary['institution'] = output_clone['netcdf_attribute']['institution']
+        self.attributeDictionary['title'      ] = output_clone['netcdf_attribute']['title'      ]
+        self.attributeDictionary['source'     ] = output_clone['netcdf_attribute']['source'     ]
+        self.attributeDictionary['history'    ] = output_clone['netcdf_attribute']['history'    ]
+        self.attributeDictionary['references' ] = output_clone['netcdf_attribute']['references' ]
+        self.attributeDictionary['description'] = output_clone['netcdf_attribute']['description']
+        self.attributeDictionary['comment'    ] = output_clone['netcdf_attribute']['comment'    ]
         
-    def changeAtrribute(self,ncFileName,attributeDictionary):
+    def createNetCDF(self, ncFileName, varName, varUnits, longName=None):
 
-        rootgrp= nc.Dataset(ncFileName,'a',format= self.format)
-
-        for k, v in attributeDictionary.items():
-          setattr(rootgrp,k,v)
-
-        rootgrp.sync()
-        rootgrp.close()
-
-    def createNetCDF(self,ncFileName,varName,varUnits):
-
-        rootgrp= nc.Dataset(ncFileName,'w',format= self.format)
+        rootgrp = nc.Dataset(ncFileName,'w',format= self.format)
 
         #-create dimensions - time is unlimited, others are fixed
         rootgrp.createDimension('time',None)
         rootgrp.createDimension('lat',len(self.latitudes))
         rootgrp.createDimension('lon',len(self.longitudes))
 
-        date_time= rootgrp.createVariable('time','f4',('time',))
-        date_time.standard_name= 'time'
-        date_time.long_name= 'Days since 1901-01-01'
+        date_time = rootgrp.createVariable('time','f4',('time',))
+        date_time.standard_name = 'time'
+        date_time.long_name = 'Days since 1901-01-01'
 
-        date_time.units= 'Days since 1901-01-01' 
-        date_time.calendar= 'standard'
+        date_time.units = 'Days since 1901-01-01' 
+        date_time.calendar = 'standard'
 
         lat= rootgrp.createVariable('lat','f4',('lat',))
-        lat.long_name= 'latitude'
-        lat.units= 'degrees_north'
+        lat.long_name = 'latitude'
+        lat.units = 'degrees_north'
         lat.standard_name = 'latitude'
 
         lon= rootgrp.createVariable('lon','f4',('lon',))
-        lon.standard_name= 'longitude'
-        lon.long_name= 'longitude'
-        lon.units= 'degrees_east'
+        lon.standard_name = 'longitude'
+        lon.long_name = 'longitude'
+        lon.units = 'degrees_east'
 
         lat[:]= self.latitudes
         lon[:]= self.longitudes
 
         shortVarName = varName
+        longVarName  = varName
+        if longName != None: longVarName = longName
 
-        var= rootgrp.createVariable(shortVarName,'f4',('time','lat','lon',) ,fill_value=vos.MV,zlib=False)
-        var.standard_name= varName
-        var.long_name= varName
-        var.units= varUnits
+        var = rootgrp.createVariable(shortVarName,'f4',('time','lat','lon',),fill_value=vos.MV,zlib=self.zlib)
+        var.standard_name = varName
+        var.long_name = longVarName
+        var.units = varUnits
 
         attributeDictionary = self.attributeDictionary
         for k, v in attributeDictionary.items(): setattr(rootgrp,k,v)
@@ -95,50 +87,92 @@ class OutputNetcdf():
         rootgrp.sync()
         rootgrp.close()
 
-    def addNewVariable(self,ncFileName,varName,varUnits):
+    def changeAtrribute(self, ncFileName, attributeDictionary, closeFile = False):
 
-        #~ print ncFileName
-        rootgrp= nc.Dataset(ncFileName,'a',format= self.format)
+        if ncFileName in filecache.keys():
+            #~ print "Cached: ", ncFileName
+            rootgrp = filecache[ncFileName]
+        else:
+            #~ print "New: ", ncFileName
+            rootgrp = nc.Dataset(ncFileName,'a')
+            filecache[ncFileName] = rootgrp
+
+        for k, v in attributeDictionary.items(): setattr(rootgrp,k,v)
+
+        rootgrp.sync()
+        if closeFile == True: rootgrp.close()
+
+    def addNewVariable(self, ncFileName, varName, varUnits, longName=None, closeFile = False):
+
+        if ncFileName in filecache.keys():
+            #~ print "Cached: ", ncFileName
+            rootgrp = filecache[ncFileName]
+        else:
+            #~ print "New: ", ncFileName
+            rootgrp = nc.Dataset(ncFileName,'a')
+            filecache[ncFileName] = rootgrp
 
         shortVarName = varName
 
-        var= rootgrp.createVariable(shortVarName,'f4',('time','lat','lon',) ,fill_value=vos.MV,zlib=False)
-        var.standard_name= varName
-        var.long_name= varName
-        var.units= varUnits
+        var = rootgrp.createVariable(shortVarName,'f4',('time','lat','lon',) ,fill_value=vos.MV,zlib=self.zlib)
+        var.standard_name = varName
+        var.long_name = varName
+        var.units = varUnits
 
         rootgrp.sync()
-        rootgrp.close()
+        if closeFile == True: rootgrp.close()
 
-    def data2NetCDF(self,ncFile,varName,varField,timeStamp,posCnt = None):
+    def data2NetCDF(self, ncFileName, shortVarName, varField, timeStamp, posCnt = None, closeFile = False):
 
-        #-write data to netCDF
-        rootgrp= nc.Dataset(ncFile,'a')    
-
-        shortVarName = varName        
+        if ncFileName in filecache.keys():
+            #~ print "Cached: ", ncFileName
+            rootgrp = filecache[ncFileName]
+        else:
+            #~ print "New: ", ncFileName
+            rootgrp = nc.Dataset(ncFileName,'a')
+            filecache[ncFileName] = rootgrp
 
         date_time = rootgrp.variables['time']
         if posCnt == None: posCnt = len(date_time)
-        date_time[posCnt]= nc.date2num(timeStamp,date_time.units,date_time.calendar)
+        date_time[posCnt] = nc.date2num(timeStamp,date_time.units,date_time.calendar)
 
-        rootgrp.variables[shortVarName][posCnt,:,:]= (varField)
+        rootgrp.variables[shortVarName][posCnt,:,:] = varField
 
         rootgrp.sync()
-        rootgrp.close()
+        if closeFile == True: rootgrp.close()
 
-    def dataList2NetCDF(self,ncFile,varNameList,varFieldList,timeStamp,posCnt = None):
+    def dataList2NetCDF(self, ncFileName, shortVarNameList, varFieldList, timeStamp, posCnt = None, closeFile = False):
 
-        #-write data to netCDF
-        rootgrp= nc.Dataset(ncFile,'a')    
+        if ncFileName in filecache.keys():
+            #~ print "Cached: ", ncFileName
+            rootgrp = filecache[ncFileName]
+        else:
+            #~ print "New: ", ncFileName
+            rootgrp = nc.Dataset(ncFileName,'a')
+            filecache[ncFileName] = rootgrp
 
         date_time = rootgrp.variables['time']
         if posCnt == None: posCnt = len(date_time)
 
-        for varName in varNameList:
-            shortVarName = varName        
-            varField = varFieldList[varName]
-            date_time[posCnt]= nc.date2num(timeStamp,date_time.units,date_time.calendar)
-            rootgrp.variables[shortVarName][posCnt,:,:]= varField
+        for shortVarName in shortVarNameList:
+            date_time[posCnt] = nc.date2num(timeStamp,date_time.units,date_time.calendar)
+            rootgrp.variables[shortVarName][posCnt,:,:] = varFieldList[shortVarName]
 
         rootgrp.sync()
+        if closeFile == True: rootgrp.close()
+
+    def close(self, ncFileName):
+
+        if ncFileName in filecache.keys():
+            #~ print "Cached: ", ncFileName
+            rootgrp = filecache[ncFileName]
+        else:
+            #~ print "New: ", ncFileName
+            rootgrp = nc.Dataset(ncFileName,'a')
+            filecache[ncFileName] = rootgrp
+
+        # closing the file 
         rootgrp.close()
+
+        # remove ncFilename from filecache
+        if ncFileName in filecache.keys(): filecache.pop(ncFileName, None)

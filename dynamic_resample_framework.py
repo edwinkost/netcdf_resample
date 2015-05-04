@@ -18,14 +18,14 @@ class ResampleFramework(DynamicModel):
                        output_netcdf,\
                        modelTime,\
                        tmpDir = "/dev/shm/"):
-        DynamicModel.__init__(self)           # 
+        DynamicModel.__init__(self) 
 
         self.input_netcdf = input_netcdf
         self.output_netcdf = output_netcdf 
         self.tmpDir = tmpDir
         self.modelTime = modelTime
 
-        # input clone properties (based on netcdf file):
+        # a dictionary contains input clone properties (based on the input netcdf file)
         self.input_clone = vos.netcdfCloneAttributes(self.input_netcdf['file_name'],\
                                                      self.input_netcdf['cell_resolution']*60.,\
                                                      True)
@@ -35,50 +35,67 @@ class ResampleFramework(DynamicModel):
                                vos.getMapAttributes(self.input_clone['cellsize'])
         
         # clone map 
-        if self.resample_factor > 1.0: # Upscaling
+        if self.resample_factor > 1.0: # upscaling
+
             # the resample factor must be a rounded value without decimal
             if self.resample_factor = round(self.resample_factor)
+            
+            # output clone properties
+            self.output_clone = {}
+            self.output_clone['rows'    ] = int(round(float(self.input_clone['rows'])/float(self.resample_factor))) 
+            self.output_clone['cols'    ] = int(round(float(self.input_clone['rows'])/float(self.resample_factor)))
+            self.output_clone['cellsize'] = self.output_netcdf["cell_resolution"]
+            self.output_clone['xUL'     ] = self.input_clone['xUL']
+            self.output_clone['yUL'     ] = self.input_clone['yUL']
+
             # get the unique ids for the output resolution
             # - use the clone for the output resolution (only for a temporary purpose)
-            pcr.setclone(self.resample_factor[],\
-                         self.resample_factor[],\
-                         self.resample_factor[],\
-                         )                          # order: nrRows,nrCols,cellSize,west(),north()
-            
-            self.unique_ids = pcr.
+            pcr.setclone(self.output_clone['rows'    ],
+                         self.output_clone['cols'    ],
+                         self.output_clone['cellsize'],
+                         self.output_clone['xUL'     ],
+                         self.output_clone['yUL'     ])
+            # - unique_ids in a numpy object
+            cell_unique_ids = pcr.pcr2numpy(pcr.scalar(pcr.uniqueid(pcr.boolean(1.),vos.MV))
 
-
-            
-            
             # the remaining pcraster calculations are performed at the input resolution
-            pcr.setclone(self.input_netcd["cell_area"])
+            pcr.setclone(self.input_clone['rows'    ],
+                         self.input_clone['cols'    ],
+                         self.input_clone['cellsize'],
+                         self.input_clone['xUL'     ],
+                         self.input_clone['yUL'     ])
             
-            self.resample_factor = round(self.resample_factor)
+            # clone map file used for the function: 
+            self.clone_map_file = self.output_netcdf['clone_file']
             
-        else:
+            # cell unique ids in a pcraster object
+            self.unique_ids = pcr.nominal(pcr.numpy2pcr(pcr.Scalar,
+                              vos.regridData2FinerGrid(self.resample_factor,cell_unique_ids), vos.MV))
+
+            # cell area (m2)
+            self.cell_area = vos.readPCRmapClone(\
+                             self.o_netcdf["cell_area"],\
+                             self.clone_map_file,\
+                             self.tmpDir)
+            
+        else: # downscaling / resampling to smaller cell length
+
             # all pcraster calculations are performed at the output resolution
-        self.clone_map = pcr.boolean(1)
+            pcr.setclone(self.input_clone['rows'    ],
+                         self.input_clone['cols'    ],
+                         self.input_clone['cellsize'],
+                         self.input_clone['xUL'     ],
+                         self.input_clone['yUL'     ])
 
-
-        
-        # cell area (m2)
-        self.cell_area = vos.readPCRmapClone(\
-                        self.input_files["model_cell_area"],\
-                        self.input_files["model_cell_area"],\
-                        self.tmpDir)
+            # clone map file used in the calculation
+            self.clone_map_file = self.input_netcdf['clone_file']
         
         
-        # unique ids for upscaling to one degree resolution (grace resolution)
-        self.one_degree_id = pcr.nominal(\
-                             vos.readPCRmapClone(\
-                            self.input_files["one_degree_id"],\
-                            self.input_files["model_cell_area"],\
-                            self.tmpDir))
+        # an object for netcdf reporting
+        self.output = OutputNetcdf(self.output_clone)       
         
-        # object for reporting at coarse resolution (i.e. one arc degree - grace resolution)
-        self.output = OutputNetcdf(self.input_files["one_degree_id"], self.input_files["model_cell_area"])       
         # preparing the netcdf file at coarse resolution:
-        self.output.createNetCDF(self.output_files['one_degree_tws']['model'], "pcrglobwb_tws","m")
+        self.output.createNetCDF(self.output_clone)
         #
         # edit some attributes:
         attributeDictionary = {}
@@ -91,43 +108,47 @@ class ResampleFramework(DynamicModel):
 
     def dynamic(self):
         
-        # re-calculate model time using current pcraster timestep value
+        # update model time using the current pcraster timestep value
         self.modelTime.update(self.currentTimeStep())
 
-        # processing / calculating only at the last day of the month:
-        if self.modelTime.endMonth == True:
+        # reading
+        try:
+            input_value = 
+            data_available = True  
         
-            #~ # open totalWaterStorageThickness (unit: m, monthly average values) 
-            #~ value_at_5min = vos.netcdf2PCRobjClone(\
-                            #~ self.input_files["model_total_water_storage"],\
-                            #~ "total_thickness_of_water_storage",\
-                            #~ str(self.modelTime.fulldate), useDoy = "end-month")
-            
-            # open totalWaterStorageThickness (unit: m, monthly average values) 
-            value_at_5min = vos.netcdf2PCRobjClone(\
-                            self.input_files["model_total_water_storage"],\
-                            self.input_files["model_total_water_storage_variable_name"],\
-                            str(self.modelTime.fulldate), useDoy = "end-month")
+        except:
+            print "No values are available for this date: "+str(self.modelTime)
+            data_available = False 
+        
+        if data_available: output_value = input_value
 
-            # upscale to one degree resolution
-            value_at_1deg_but_5min_cell = \
+        # upscaling
+        if data_available and self.resample_factor > 1.0:
+        
+            # upscaling using cell area
+            output_value_in_pcraster = \
                             vos.getValDivZero(\
-                            pcr.areatotal(self.cell_area*value_at_5min,\
-                                                         self.one_degree_id),\
-                            pcr.areatotal(self.cell_area,self.one_degree_id),
-                            vos.smallNumber)
+                            pcr.areatotal(output_value*self_cell_area, self.unique_ids),\
+                            pcr.areatotal(self.cell_area, self.unique_ids), vos.smallNumber)
             
-            # resample from 5 arc minute cells to one degree cells
-            value_at_1deg = vos.regridToCoarse(\
-                            pcr.pcr2numpy(value_at_1deg_but_5min_cell,vos.MV),self.resample_factor,"max",vos.MV)
-            #
-            # reporting
+            # resample to the output clone resolution 
+            output_value = vos.regridToCoarse(pcr.pcr2numpy(output_value_in_pcraster, vos.MV),
+                                              self.resample_factor, "max", vos.MV)
+
+        # reporting
+        if data_available:
+
+            # time stamp 
             timestepPCR = self.modelTime.timeStepPCR
             timeStamp = datetime.datetime(self.modelTime.year,\
                                           self.modelTime.month,\
                                           self.modelTime.day,0)
-            # write it to netcdf 
-            self.output.data2NetCDF(self.output_files['one_degree_tws']['model'],\
-                                    "pcrglobwb_tws",\
-                                    value_at_1deg,\
+            # write to netcdf 
+            self.output.data2NetCDF(self.output_netcdf['file_name'],\
+                                    self.output_netcdf['variable_name'],\
+                                    output_value,\
                                     timeStamp)
+
+        # closing the file at the end of
+        if self.modelTime.isLastTimeStep(): self.output.close(self.output_netcdf['file_name'])
+

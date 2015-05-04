@@ -16,12 +16,17 @@ from currTimeStep import ModelTime
 # utility module:
 import virtualOS as vos
 
+# starting and end dates
+startDate = "2003-01-01" #YYYY-MM-DD
+endDate   = "2010-12-31" #YYYY-MM-DD
+
 # input netcdf file:
 input_netcdf = {}
 input_netcdf['file_name']        = ""
 input_netcdf['variable_name']    = ""
-# cell area (m2) for the input netcdf file (used for )
+input_netcdf['clone_file']       = ""
 input_netcdf['cell_resolution']  = 5./60.
+# cell area (m2) for the input netcdf file
 input_netcdf['cell_area']        = ""
 
 # output netcdf file:
@@ -32,10 +37,15 @@ output_netcdf['variable_name']   = ""
 # cell size/length/resolution (arc-degree) for the output netcdf file 
 output_netcdf['cell_resolution'] = ""
 
+output_netcdf['format']    = ""
+output_netcdf['format']    = ""
+output_netcdf['attribute'] = ""
 
-# starting and end dates
+
+# output netcdf attributes
 startDate = "2003-01-01" #YYYY-MM-DD
 endDate   = "2010-12-31" #YYYY-MM-DD
+
 
 # make an output folder
 try:

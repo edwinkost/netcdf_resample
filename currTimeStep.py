@@ -121,15 +121,16 @@ class ModelTime(object):
     
     def isLastDayOfMonth(self):
         tomorrow = self.currTime + datetime.timedelta(days=1)
-        
         #tomorrow is the first day of the month
         return tomorrow.day == 1
     
     def isLastDayOfYear(self):
         tomorrow = self.currTime + datetime.timedelta(days=1)
-        
         #tomorrow is the first day of the year
         return tomorrow.timetuple().tm_yday == 1
+
+    def isLastTimeStep(self):
+        return self._currTime == self._endTime
 
     #FIXME: use isLastDayOfMonth
     @property
