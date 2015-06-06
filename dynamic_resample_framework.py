@@ -106,7 +106,8 @@ class ResampleFramework(DynamicModel):
         self.modelTime.update(self.currentTimeStep())
 
         # reading
-        if self.modelTime.isLastDayOfMonth():
+        data_available = True
+        if data_available:
             input_value = vos.netcdf2PCRobjClone(ncFile  = self.input_netcdf['file_name'],
                                                  varName = self.input_netcdf['variable_name'],
                                                  dateInput = str(self.modelTime.fulldate),
