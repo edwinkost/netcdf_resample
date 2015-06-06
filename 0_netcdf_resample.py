@@ -4,6 +4,8 @@
 import os
 import sys
 
+import numpy as np
+
 # pcraster dynamic framework is used:
 from pcraster.framework import DynamicFramework
 
