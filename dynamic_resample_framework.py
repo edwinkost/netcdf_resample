@@ -27,7 +27,7 @@ class ResampleFramework(DynamicModel):
 
         # a dictionary contains input clone properties (based on the input netcdf file)
         self.input_clone = vos.netcdfCloneAttributes(self.input_netcdf['file_name'],\
-                                                     round(self.input_netcdf['cell_resolution']*60.,1),\
+                                                     np.round(self.input_netcdf['cell_resolution']*60.,1),\
                                                      True)
 
         # resampling factor: ratio between output and input resolutions
