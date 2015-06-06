@@ -29,8 +29,8 @@ class OutputNetcdf():
         self.latitudes  = np.arange(latMax,latMin-deltaLat,-deltaLat)
         self.longitudes = np.arange(lonMin,lonMax+deltaLon,deltaLon)
 
-        print self.latitudes
-        print self.longitudes
+        print len(self.latitudes)
+        print len(self.longitudes)
         
         # netcdf format and zlib setup
         self.format = output_netcdf['format']
