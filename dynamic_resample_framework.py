@@ -27,15 +27,20 @@ class ResampleFramework(DynamicModel):
         self.modelTime = modelTime
 
         # a dictionary contains input clone properties (based on the input netcdf file)
-        self.input_clone = vos.netcdfCloneAttributes(self.input_netcdf['file_name'],\
-                                                     np.round(self.input_netcdf['cell_resolution']*60.,1),\
-                                                     True)
+        #~ self.input_clone = vos.netcdfCloneAttributes(self.input_netcdf['file_name'],\
+                                                     #~ np.round(self.input_netcdf['cell_resolution']*60.,1),\
+                                                     #~ True)
+        pcr.setclone(self.input_netcdf['clone_file'])
+        self.input_clone = {}
+        self.input_clone['cellsize'] = pcr.clone().cellSize()
+        self.input_clone['rows']     = int(pcr.clone().nrRows()) 
+        self.input_clone['cols']     = int(pcr.clone().nrCols())
+        self.input_clone['xUL']      = round(pcr.clone().west(), 2)
+        self.input_clone['yUL']      = round(pcr.clone().north(), 2)
 
         # resampling factor: ratio between output and input resolutions
         self.resample_factor = self.output_netcdf["cell_resolution"]/\
                                 self.input_netcdf['cell_resolution']
-        
-        print self.resample_factor
         
         # clone map 
         if self.resample_factor > 1.0: # upscaling
