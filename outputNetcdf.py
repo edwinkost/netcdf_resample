@@ -26,8 +26,9 @@ class OutputNetcdf():
         deltaLon = cellLength
         lonMin = output_netcdf['xUL'] + deltaLon/2.
         lonMax = output_netcdf['xUL'] + deltaLon*output_netcdf['cols'] - deltaLon/2.
-        self.latitudes  = np.arange(latMax,latMin-deltaLat,-deltaLat)
-        self.longitudes = np.arange(lonMin,lonMax+deltaLon,deltaLon)
+        
+        self.latitudes  = np.arange(latMax,latMin,-deltaLat)
+        self.longitudes = np.arange(lonMin,lonMax ,deltaLon)
 
         print len(self.latitudes)
         print len(self.longitudes)
