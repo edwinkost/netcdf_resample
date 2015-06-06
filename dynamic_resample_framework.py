@@ -5,6 +5,7 @@ import os
 import sys
 import datetime
 import calendar
+import numpy as np
 
 import pcraster as pcr
 from pcraster.framework import DynamicModel
