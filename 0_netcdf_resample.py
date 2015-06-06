@@ -62,7 +62,7 @@ output_netcdf['netcdf_attribute']['comment'    ] = "Please use this dataset only
 output_netcdf['netcdf_attribute']['comment'    ] += "For using it and publishing it, please acknowledge its source: 5km Gridded Meteo Database (C) European Commission - JRDC, 2014 and its reference: Ntegeka et al., 2013 (doi: 10.2788/51262). "
 output_netcdf['netcdf_attribute']['comment'    ] += "The original data provided by JRC are in European ETRS projection, 5km grid; http://en.wikipedia.org/wiki/European_grid. "
 output_netcdf['netcdf_attribute']['comment'    ] += important_information
-output_netcdf['netcdf_attribute']['description] = "None"
+output_netcdf['netcdf_attribute']['description'] = "None"
 
 # make an output folder
 cleanOutputFolder = False
