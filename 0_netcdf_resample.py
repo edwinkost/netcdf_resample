@@ -19,8 +19,8 @@ from currTimeStep import ModelTime
 import virtualOS as vos
 
 # starting and end dates
-startDate = "2008-01-01" # "1990-01-01" #YYYY-MM-DD
-endDate   = "2013-12-31" # "2014-10-31" #YYYY-MM-DD
+startDate = "1990-01-01" # "2008-01-01" # "1990-01-01" #YYYY-MM-DD
+endDate   = "2014-10-31" # "2013-12-31" # "2014-10-31" #YYYY-MM-DD
 
 # input netcdf file:
 input_netcdf = {}
