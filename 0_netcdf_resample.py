@@ -24,7 +24,7 @@ endDate   = "2014-10-31" #YYYY-MM-DD
 
 # input netcdf file:
 input_netcdf = {}
-input_netcdf['folder']           = "/scratch/edwin/input/forcing/hyperhydro_wg1/EFAS/netcdf_lonlat/2.5min/precipitation/"
+input_netcdf['folder']           = "/scratch/edwin/input/forcing/hyperhydro_wg1/EFAS/netcdf_latlon/2.5min/precipitation/"
 input_netcdf['file_name']        = "precipitation_efas_rhine-meuse.nc"
 input_netcdf['file_name']        = input_netcdf['folder']+"/"+input_netcdf['file_name']
 input_netcdf['variable_name']    = "precipitation"
@@ -37,7 +37,7 @@ input_netcdf['cell_area']        = "/scratch/edwin/input/forcing/hyperhydro_wg1/
 output_netcdf = {}
 # cell size/length/resolution (arc-degree) for the output netcdf file 
 output_netcdf['cell_resolution'] = 5./60.
-output_netcdf['folder']          = "/scratch/edwin/input/forcing/hyperhydro_wg1/EFAS/netcdf_lonlat/5min/precipitation/"
+output_netcdf['folder']          = "/scratch/edwin/input/forcing/hyperhydro_wg1/EFAS/netcdf_latlon/5min/precipitation/"
 output_netcdf['file_name']       = "precipitation_efas_rhine-meuse.nc"
 output_netcdf['file_name']       = output_netcdf['folder']+"/"+output_netcdf['file_name']
 output_netcdf['variable_name']   = input_netcdf['variable_name']

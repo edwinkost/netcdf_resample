@@ -27,12 +27,14 @@ class OutputNetcdf():
         lonMin = output_netcdf['xUL'] + deltaLon/2.
         lonMax = output_netcdf['xUL'] + deltaLon*output_netcdf['cols'] - deltaLon/2.
         
-        self.latitudes  = np.arange(latMax,latMin,-deltaLat)
-        self.longitudes = np.arange(lonMin,lonMax ,deltaLon)
+        # cell centre coordinates
+        self.longitudes = np.arange(output_netcdf['xUL'] + output_netcdf['cellsize']*0.5, \
+                                    output_netcdf['xUL'] + output_netcdf['cellsize']*output_netcdf['cols'], \
+                                    output_netcdf['cellsize'])
+        self.latitudes  = np.arange(output_netcdf['yUL'] - output_netcdf['cellsize']*0.5, \
+                                    output_netcdf['yUL'] - output_netcdf['cellsize']*output_netcdf['rows'], \
+                                   -output_netcdf['cellsize'])
 
-        print len(self.latitudes)
-        print len(self.longitudes)
-        
         # netcdf format and zlib setup
         self.format = output_netcdf['format']
         self.zlib   = output_netcdf['zlib'] 
