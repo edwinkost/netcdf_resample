@@ -41,7 +41,7 @@ output_netcdf['folder']          = "/scratch/edwin/input/forcing/hyperhydro_wg1/
 output_netcdf['file_name']       = "temperature_efas_rhine-meuse.nc"
 output_netcdf['file_name']       = output_netcdf['folder']+"/"+output_netcdf['file_name']
 output_netcdf['variable_name']   = input_netcdf['variable_name']
-output_netcdf['variable_unit']   = "m.day-1"
+output_netcdf['variable_unit']   = 'degrees Celcius'
 #
 # input and output resolutions at arc minute unit rounded to one value behind the decimal
 input_cell_size_in_arc_minutes  = np.round(input_netcdf['cell_resolution']  * 60.0, 1) 
