@@ -19,8 +19,8 @@ from currTimeStep import ModelTime
 import virtualOS as vos
 
 # starting and end dates
-startDate = "1990-01-01" #YYYY-MM-DD
-endDate   = "2014-10-31" #YYYY-MM-DD
+startDate = "2008-01-01" # "1990-01-01" #YYYY-MM-DD
+endDate   = "2013-12-31" # "2014-10-31" #YYYY-MM-DD
 
 # input netcdf file:
 input_netcdf = {}
@@ -38,7 +38,7 @@ output_netcdf = {}
 # cell size/length/resolution (arc-degree) for the output netcdf file 
 output_netcdf['cell_resolution'] = 5./60.
 output_netcdf['folder']          = "/scratch/edwin/input/forcing/hyperhydro_wg1/EFAS/netcdf_latlon/5min/precipitation/"
-output_netcdf['file_name']       = "precipitation_efas_rhine-meuse.nc"
+output_netcdf['file_name']       = "precipitation_efas_rhine-meuse_2008to2013.nc"
 output_netcdf['file_name']       = output_netcdf['folder']+"/"+output_netcdf['file_name']
 output_netcdf['variable_name']   = input_netcdf['variable_name']
 output_netcdf['variable_unit']   = "m.day-1"
