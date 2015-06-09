@@ -18,6 +18,20 @@ from currTimeStep import ModelTime
 # utility module:
 import virtualOS as vos
 
+# variable dictionaries:
+import efas_variable_list_final as varDict
+
+
+# efas_variable_code in a list
+efas_variable_name = ["pd","pr","rg","ta","ws"]
+
+# obtain efas_variable_code from the system argurment
+try:
+   efas_variable_name = sys.argv[1]
+except:
+   pass
+
+
 # starting and end dates
 startDate = "1990-01-01" # "2008-01-01" # "1990-01-01" #YYYY-MM-DD
 endDate   = "2014-10-31" # "2013-12-31" # "2014-10-31" #YYYY-MM-DD
@@ -25,9 +39,9 @@ endDate   = "2014-10-31" # "2013-12-31" # "2014-10-31" #YYYY-MM-DD
 # input netcdf file:
 input_netcdf = {}
 input_netcdf['folder']           = "/scratch/edwin/input/forcing/hyperhydro_wg1/EFAS/netcdf_latlon/2.5min/precipitation/"
-input_netcdf['file_name']        = "precipitation_efas_rhine-meuse.nc"
+input_netcdf['file_name']        = varDict.netcdf_short_name[efas_variable_name]+"_efas_rhine-meuse.nc"
 input_netcdf['file_name']        = input_netcdf['folder']+"/"+input_netcdf['file_name']
-input_netcdf['variable_name']    = "precipitation"
+input_netcdf['variable_name']    = varDict.netcdf_short_name[efas_variable_name]
 input_netcdf['clone_file']       = "/scratch/edwin/input/forcing/hyperhydro_wg1/EFAS/cell_area_maps/RhineMeuseCellsize2.5min.map"
 input_netcdf['cell_resolution']  = 2.5/60.
 # cell area (m2) for the input netcdf file:
@@ -38,10 +52,11 @@ output_netcdf = {}
 # cell size/length/resolution (arc-degree) for the output netcdf file 
 output_netcdf['cell_resolution'] = 30./60.
 output_netcdf['folder']          = "/scratch/edwin/input/forcing/hyperhydro_wg1/EFAS/netcdf_latlon/30min/precipitation/"
-output_netcdf['file_name']       = "precipitation_efas_rhine-meuse.nc"
+output_netcdf['file_name']       = varDict.netcdf_short_name[efas_variable_name]+"_efas_rhine-meuse.nc"
 output_netcdf['file_name']       = output_netcdf['folder']+"/"+output_netcdf['file_name']
 output_netcdf['variable_name']   = input_netcdf['variable_name']
-output_netcdf['variable_unit']   = 'm.day-1'
+output_netcdf['variable_unit']   = varDict.netcdf_unit[efas_variable_name]
+output_netcdf['long_name']       = varDict.netcdf_long_name[efas_variable_name] 
 #
 # input and output resolutions at arc minute unit rounded to one value behind the decimal
 input_cell_size_in_arc_minutes  = np.round(input_netcdf['cell_resolution']  * 60.0, 1) 
@@ -62,7 +77,7 @@ output_netcdf['netcdf_attribute']['comment'    ] = "Please use this dataset only
 output_netcdf['netcdf_attribute']['comment'    ] += "For using it and publishing it, please acknowledge its source: 5km Gridded Meteo Database (C) European Commission - JRDC, 2014 and its reference: Ntegeka et al., 2013 (doi: 10.2788/51262). "
 output_netcdf['netcdf_attribute']['comment'    ] += "The original data provided by JRC are in European ETRS projection, 5km grid; http://en.wikipedia.org/wiki/European_grid. "
 output_netcdf['netcdf_attribute']['comment'    ] += important_information
-output_netcdf['netcdf_attribute']['description'] = "None"
+output_netcdf['netcdf_attribute']['description'] = varDict.description[efas_variable_name]
 
 # make an output folder
 cleanOutputFolder = False
