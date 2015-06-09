@@ -133,6 +133,7 @@ class ResampleFramework(DynamicModel):
         if data_available and self.resample_factor > 1.0:
         
             # upscaling using cell area
+            cell_area = pcr.ifthen(pcr.defined(output_value), self.cell_area)
             output_value_in_pcraster = \
                             vos.getValDivZero(\
                             pcr.areatotal(output_value*self.cell_area, self.unique_ids),\
