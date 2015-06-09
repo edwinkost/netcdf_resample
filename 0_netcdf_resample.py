@@ -38,7 +38,7 @@ endDate   = "2014-10-31" # "2013-12-31" # "2014-10-31" #YYYY-MM-DD
 
 # input netcdf file:
 input_netcdf = {}
-input_netcdf['folder']           = "/scratch/edwin/input/forcing/hyperhydro_wg1/EFAS/netcdf_latlon/2.5min/precipitation/"
+input_netcdf['folder']           = "/scratch/edwin/input/forcing/hyperhydro_wg1/EFAS/netcdf_latlon/2.5min/"+varDict.netcdf_short_name[efas_variable_name]+"/"
 input_netcdf['file_name']        = varDict.netcdf_short_name[efas_variable_name]+"_efas_rhine-meuse.nc"
 input_netcdf['file_name']        = input_netcdf['folder']+"/"+input_netcdf['file_name']
 input_netcdf['variable_name']    = varDict.netcdf_short_name[efas_variable_name]
