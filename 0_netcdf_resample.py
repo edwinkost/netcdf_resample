@@ -50,7 +50,7 @@ input_netcdf['cell_area']        = "/scratch/edwin/input/forcing/hyperhydro_wg1/
 # output netcdf file:
 output_netcdf = {}
 # cell size/length/resolution (arc-degree) for the output netcdf file 
-output_netcdf['cell_resolution'] = 5./60.
+output_netcdf['cell_resolution'] = 30./60.
 output_netcdf['folder']          = "/scratch/edwin/input/forcing/hyperhydro_wg1/EFAS/netcdf_latlon/30min/"+varDict.netcdf_short_name[efas_variable_name]+"/"
 output_netcdf['file_name']       = varDict.netcdf_short_name[efas_variable_name]+"_efas_rhine-meuse.nc"
 output_netcdf['file_name']       = output_netcdf['folder']+"/"+output_netcdf['file_name']
